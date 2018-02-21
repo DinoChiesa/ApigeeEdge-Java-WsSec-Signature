@@ -17,7 +17,7 @@ In all the examples that follow, you should replace the APIHOST with something l
 * VHOST_IP:VHOST_PORT, if running in a self-managed cloud
 
 
-### Insert a node into an existing XML
+### Sign an existing SOAP request
 
 ```
 curl -i -H 'content-type: application/xml' \
