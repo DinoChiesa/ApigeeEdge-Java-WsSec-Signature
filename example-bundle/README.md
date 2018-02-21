@@ -1,8 +1,10 @@
 # API Proxy bundle to demonstrate WS-Security signing
 
-This Apigee Edge API Proxy demonstrates the use of the custom Java policy that performs WS-Sec Signing.
-It can be used
-on private cloud or public cloud instances of Edge.  It relies on [the custom Java policy](../callout) included here.
+This Apigee Edge API Proxy demonstrates the use of the custom Java
+policy that performs WS-Sec Signing.
+
+It can be used on private cloud or public cloud instances of Edge.  It
+relies on [the custom Java policy](../callout) included here.
 
 
 ## Disclaimer
