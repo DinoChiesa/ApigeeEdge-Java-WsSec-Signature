@@ -76,34 +76,89 @@ This example is not an official Google product, nor is it part of an official Go
 
 ## Using this policy
 
-To use this policy in Apigee Edge, you need to
+To use this policy in Apigee Edge, you do not need to rebuild it. You need only to configure the Callout policy with the appropriate information. 
 
- * insert your .jks file into the [keys directory](./callout/src/main/resources/keys)
- * modify the [crypto.properties file](./callout/src/main/resources/crypto.properties) to use the correct alias and password
- * rebuild the JAR
- * package the JAR into your resources/java directory for the sharedflow or API proxy
- * configure the Callout
-
-
-
-## Configuration
+## Simple Example Configuration
 
 A simple configuration looks like this:
 
 ```xml
 <JavaCallout name='Java-SignSoapDoc'>
   <Properties>
-    <Property name='alias'>soadev</Property>
-    <Property name='password'>devteam</Property>
-    <!-- the above should be private variables retrieved from KVM:
+    <Property name='alias'>apigee</Property>
+    <Property name='password'>Secret123</Property>
+    <!-- the above really should be private variables retrieved from KVM:
       <Property name='alias'>{private.alias}</Property>
       <Property name='password'>{private.password}</Property>
     -->
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPSignerCallout</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.1.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.2.jar</ResourceURL>
 </JavaCallout>
 ```
+
+This uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want.
+
+A better configuration specifies the .JKS file to the callout.
+
+```xml
+<JavaCallout name='Java-SignSoapDoc-BYOJKS'>
+  <Properties>
+    <Property name='alias'>myalias</Property>
+    <Property name='password'>mypassword</Property>
+    <!-- this is the base64-encoded JKS file, generated with
+         -->
+    <Property name='jks-base64'>
+      /u3+7QAAAAIAAAACAAAAAQAGc29hZGV2AAABUoQ0biUAAAUCMIIE/jAOBgorBgEE
+      ASoCEQEBBQAEggTq3Nh2qAwD/cp3TB7dfy5GJRCSomjR0cWHPAeD/wHZDjiZYbBC
+      XB2sByHfcogXKY5uIVfd7pD2DTCK3eFeYNnEQi0vhI2yGYbnwnX3GCOTpEv5ty1p
+      xh1O+gQfm+GLCekeSOyjE2gt+TWC9Jt0VBHz87gn7dLyfTowEdPEo40/t9KJHgAd
+      t6JhjomFwDjO5kTHvtwyWAl5taGRwgtXspGiuwgvD+9f9hKsqNGXijAocUjr3RFz
+      BpyEHAtO8WBrFyRsHgu3hk1U++e4ncpMvxOyr2Jo93rSRyTp3VqmQRRHVSaoCRH8
+      ....
+    </Property>
+  </Properties>
+  <ClassName>com.google.apigee.callout.wssec.SOAPSignerCallout</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.2.jar</ResourceURL>
+</JavaCallout>
+```
+
+That octet stream is the result of base64-encoding a .jks file. To get that, you need to do 2 things.
+
+1. generate a JKS
+2. base64 encode it.
+
+To generate, follow [Oracle's instructions using the keytool](https://docs.oracle.com/cd/E19509-01/820-3503/ggfen/index.html).
+
+```
+keytool -genkey -v -keystore my-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
+```
+
+On MacOS, you can do the encoding of the resulting .jks file like this:
+```
+ openssl base64 -in my-keystore.jks -out jks.bin
+```
+
+In this case, the sample .jks that is compiled into the JAR is not used to sign the payload. Instead the
+.jks specified by the base64 string is used.
+
+
+Best practice is to store those parameters in the encrypted
+KVM, and reference them by variable, like this:
+
+```xml
+<JavaCallout name='Java-SignSoapDoc-BYOJKS'>
+  <Properties>
+    <Property name='alias'>{private.keyalias}</Property>
+    <Property name='password'>{private.keypassword}</Property>
+    <Property name='jks-base64'>{private.jks-base64}</Property>
+  </Properties>
+  <ClassName>com.google.apigee.callout.wssec.SOAPSignerCallout</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.2.jar</ResourceURL>
+</JavaCallout>
+```
+
+There is an additional property you can specify if appropriate: jks-password.
 
 
 ## Example API Proxy

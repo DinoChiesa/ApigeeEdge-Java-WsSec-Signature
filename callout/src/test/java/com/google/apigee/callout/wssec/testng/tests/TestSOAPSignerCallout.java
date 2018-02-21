@@ -113,19 +113,19 @@ public class TestSOAPSignerCallout {
     // @DataProvider(name = "batch1")
     // public static Object[][] getDataForBatch1()
     //     throws IOException, IllegalStateException {
-    // 
+    //
     //     // @DataProvider requires the output to be a Object[][]. The inner
     //     // Object[] is the set of params that get passed to the test method.
     //     // So, if you want to pass just one param to the constructor, then
     //     // each inner Object[] must have length 1.
-    // 
+    //
     //     ObjectMapper om = new ObjectMapper();
     //     om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    // 
+    //
     //     // Path currentRelativePath = Paths.get("");
     //     // String s = currentRelativePath.toAbsolutePath().toString();
     //     // System.out.println("Current relative path is: " + s);
-    // 
+    //
     //     // read in all the *.json files in the test-data directory
     //     File testDir = new File(testDataDir);
     //     if (!testDir.exists()) {
@@ -145,7 +145,7 @@ public class TestSOAPSignerCallout {
     //             list.add(tc);
     //         }
     //     }
-    // 
+    //
     //     // OMG!!  Seriously? Is this the easiest way to generate a 2-d array?
     //     int n = list.size();
     //     Object[][] data = new Object[n][];
@@ -162,7 +162,7 @@ public class TestSOAPSignerCallout {
 
     // private File getTestFile(String filename) {
     //     File testDir = new File(testDataDir);
-    //        
+    //
     //     if (!testDir.exists()) {
     //         throw new IllegalStateException("no test directory.");
     //     }
@@ -172,23 +172,20 @@ public class TestSOAPSignerCallout {
     //     }
     //     return fileInDirectory;
     // }
-    
+
     private String readFile(String filename) throws java.io.IOException {
         return new String(Files.readAllBytes(Paths.get(testDataDir, filename)),
                           StandardCharsets.UTF_8);
     }
-    
+
     @Test
     public void testBasicSigning() throws IOException {
-        //File xmldoc = getTestFile();
         messageContent = readFile("sample-soap-message-1.xml");
-        //String pemString = readFile("zionsbank.net.cert");
-        
+
         Map props = new HashMap<String,String>();
-        //props.put("certificate", pemString);
         props.put("debug", "true");
-        props.put("alias", "soadev");
-        props.put("password", "devteam");
+        props.put("alias", "apigee");
+        props.put("password", "Secret123");
         SOAPSignerCallout callout = new SOAPSignerCallout(props);
 
         // execute and retrieve output
@@ -197,22 +194,21 @@ public class TestSOAPSignerCallout {
         System.out.printf("content: %s\n", actualContent);
     }
 
-    
     // @Test(dataProvider = "batch1")
     // public void test2_Configs(TestCase tc) {
     //     if (tc.getDescription()!= null)
     //         System.out.printf("  %10s - %s\n", tc.getTestName(), tc.getDescription() );
     //     else
     //         System.out.printf("  %10s\n", tc.getTestName() );
-    // 
+    //
     //     messageContent = tc.getInput().get("message-content");
-    // 
+    //
     //     EditXmlNode callout = new EditXmlNode(tc.getInput());  // properties
-    // 
+    //
     //     // execute and retrieve output
     //     ExecutionResult actualResult = callout.execute(msgCtxt, exeCtxt);
     //     String actualContent = msgCtxt.getVariable("message.content");
-    // 
+    //
     //     String s = tc.getExpected().get("success");
     //     ExecutionResult expectedResult = (s!=null && s.toLowerCase().equals("true")) ?
     //                                        ExecutionResult.SUCCESS : ExecutionResult.ABORT;

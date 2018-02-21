@@ -26,7 +26,7 @@
   </PostFlow>
 
   <Flows>
-    <Flow name='sign'>
+    <Flow name='sign-1'>
       <Description>sign SOAP body</Description>
       <Request>
         <Step><Name>Java-SignSoapDoc</Name></Step>
@@ -35,6 +35,17 @@
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
       <Condition>(proxy.pathsuffix ~ "/t1") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='sign-2'>
+      <Description>sign SOAP body</Description>
+      <Request>
+        <Step><Name>Java-SignSoapDoc-BYOJKS</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-GoodResponse</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix ~ "/t2") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='unknown'>

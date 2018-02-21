@@ -13,6 +13,7 @@ import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class SOAPSignerCallout implements Execution {
@@ -57,16 +58,6 @@ public class SOAPSignerCallout implements Execution {
         return inc;
     }
 
-    private String getAlias(MessageContext msgCtxt) throws Exception {
-        String alias = getSimpleRequiredProperty("alias", msgCtxt);
-        return alias;
-    }
-
-    private String getPassword(MessageContext msgCtxt) throws Exception {
-        String password = getSimpleRequiredProperty("password", msgCtxt);
-        return password;
-    }
-
     private String getSimpleRequiredProperty(String propName, MessageContext msgCtxt) throws Exception {
         String value = (String) this.properties.get(propName);
         if (value == null) {
@@ -81,6 +72,12 @@ public class SOAPSignerCallout implements Execution {
             throw new IllegalStateException(propName + " resolves to an empty string.");
         }
         return value;
+    }
+
+    private String normalizeString(String s) {
+            s = s.replaceAll("^ +","");
+            s = s.replaceAll("(\r|\n) +","\n");
+            return s.trim();
     }
 
     private String getSimpleOptionalProperty(String propName, MessageContext msgCtxt) throws Exception {
@@ -124,9 +121,13 @@ public class SOAPSignerCallout implements Execution {
 
             Signer.SigningOptions options = new Signer.SigningOptions();
             options.includeSignatureToken = getIncludeSignatureToken(msgCtxt);
-            options.alias = getAlias(msgCtxt);
-            options.password = getPassword(msgCtxt);
-
+            options.alias = getSimpleRequiredProperty("alias", msgCtxt);
+            options.password = getSimpleRequiredProperty("password", msgCtxt);
+            String jksBase64 = getSimpleOptionalProperty("jks-base64", msgCtxt);
+            if (jksBase64 != null) {
+                options.jksStream = new Base64InputStream(new ByteArrayInputStream(normalizeString(jksBase64).getBytes(StandardCharsets.UTF_8)));
+                options.jksPassword = getSimpleOptionalProperty("jks-password", msgCtxt);
+            }
             String signedMessage = signer.signMessage(msgContent, options);
             String outputVar = getOutputVar(msgCtxt);
             msgCtxt.setVariable(outputVar, signedMessage);
