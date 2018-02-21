@@ -140,6 +140,6 @@ the API Proxy configuration.
 
 ## Bugs
 
-* You miust include your own .jks file in order to use this. I haven't figured out how to configure it to use a PEM-encoded certificate.
+* You must include your own .jks file in order to use this. I haven't yet figured out how to configure it to use a PEM-encoded certificate.
 * The tests don't actually verify the signature.
 
