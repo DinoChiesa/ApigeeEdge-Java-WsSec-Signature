@@ -1,0 +1,12 @@
+<JavaCallout name='Java-SignSoapDoc'>
+  <Properties>
+    <Property name='alias'>soadev</Property>
+    <Property name='password'>devteam</Property>
+    <!-- should be private variable retrieved from KVM:
+    <Property name='alias'>{private.alias}</Property>
+    <Property name='password'>{private.password}</Property>
+    -->
+  </Properties>
+  <ClassName>com.google.apigee.callout.wssec.SOAPSignerCallout</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.1.jar</ResourceURL>
+</JavaCallout>

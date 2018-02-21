@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>edge-wssec-sign-x509</artifactId>
+  <groupId>com.google.apigee</groupId>
+  <version>1.0.1</version>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+    <testng.version>6.8.7</testng.version> <!-- current: 6.9.4 -->
+    <jmockit.version>1.7</jmockit.version>
+    <wss4j.version>2.2.1</wss4j.version>
+    <commonslang.version>3.7</commonslang.version>
+    <apiproxy.java.rsrc.dir>../example-bundle/apiproxy/resources/java</apiproxy.java.rsrc.dir>
+  </properties>
+
+  <dependencies>
+
+    <!--
+
+The following 2 jar dependencies from Apigee are not avaiable in any
+public repo. You can install them in your machine-local repo (The .m2
+cache) to get this pom.xml to build successfully.
+
+Run the  buildsetup.sh script to do this, or
+
+do it manually by running these commands:
+
+mvn install:install-file \
+-Dfile=/Path/To/expressions-1.0.0.jar \
+-DgroupId=com.apigee.edge \
+-DartifactId=expressions \
+-Dversion=1.0.0 \
+-Dpackaging=jar \
+-DgeneratePom=true
+
+mvn install:install-file \
+-Dfile=/Path/To/message-flow-1.0.0.jar \
+-DgroupId=com.apigee.edge \
+-DartifactId=message-flow \
+-Dversion=1.0.0 \
+-Dpackaging=jar \
+-DgeneratePom=true
+    -->
+
+    <dependency>
+      <groupId>com.apigee.edge</groupId>
+      <artifactId>message-flow</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.apigee.edge</groupId>
+      <artifactId>expressions</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commonslang.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wss4j</groupId>
+      <artifactId>wss4j-ws-security-common</artifactId>
+      <version>${wss4j.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.wss4j</groupId>
+      <artifactId>wss4j-ws-security-dom</artifactId>
+      <version>${wss4j.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.googlecode.jmockit</groupId>
+      <artifactId>jmockit</artifactId>
+      <version>${jmockit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+  <!--
+      <modules>
+      <module>SignSOAPMessage</module>
+      </modules>
+  -->
+  <build>
+    <finalName>${project.artifactId}-${project.version}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+
+            <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+
+        <configuration>
+          <archive>
+            <!-- do not include the pom.xml file in the generated jar -->
+            <addMavenDescriptor>false</addMavenDescriptor>
+          </archive>
+        </configuration>
+
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <configuration>
+              <tasks>
+                <copy todir="${apiproxy.java.rsrc.dir}">
+                  <fileset dir="${project.build.directory}">
+                    <include name="${project.artifactId}-${project.version}.jar"/>
+                    <!-- copy any required dependencies tht are not
+                    already included in the Edge runtime: -->
+                    <include name="lib/wss4j-ws-security-common-${wss4j.version}.jar"/>
+                    <include name="lib/wss4j-ws-security-dom-${wss4j.version}.jar"/>
+                    <include name="lib/commons-lang3-${commonslang.version}.jar"/>
+                    <include name="lib/xmlsec-2.1.1.jar"/>
+
+                  </fileset>
+                  <mapper type="flatten"/>
+                </copy>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>

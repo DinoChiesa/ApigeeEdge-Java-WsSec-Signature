@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <artifactId>parent-pom</artifactId>
+      <groupId>com.amex.apigee</groupId>
+      <version>1.0</version>
+   </parent>
+   <groupId>com.amex.apigee</groupId>
+   <artifactId>SignSOAPMessage</artifactId>
+   <version>1.0-SNAPSHOT</version>
+   <name>SignSOAPMessage</name>
+   <url>http://maven.apache.org</url>
+   <packaging>jar</packaging>
+   <dependencies>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>3.8.1</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+                        <groupId>org.apache.ws.security</groupId>
+                        <artifactId>wss4j</artifactId>
+                        <version>1.6.12</version>
+         </dependency>
+         <dependency>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>openws</artifactId>
+                        <version>1.4.1</version>
+        </dependency>
+        <dependency>
+                <groupId>xml-security</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>1.3.0</version>
+        </dependency>
+   </dependencies>
+   <build>
+      <finalName>${project.artifactId}</finalName>
+      <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+
+      </resources>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>copy-dependencies</id>
+                  <phase>prepare-package</phase>
+                  <goals>
+                     <goal>copy-dependencies</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                     <overWriteReleases>false</overWriteReleases>
+                     <overWriteSnapshots>false</overWriteSnapshots>
+                     <overWriteIfNewer>true</overWriteIfNewer>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+               <execution>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>jar</goal>
+                  </goals>
+               </execution>
+            </executions>
+            <configuration />
+         </plugin>
+         <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+               <execution>
+                  <phase>package</phase>
+                  <configuration>
+                     <tasks>
+                                                  <copy file="${project.build.directory}/lib/wss4j-1.6.12.jar" todir="../../sc3tc5/apiproxy/resources/java" />
+                                                  <copy file="${project.build.directory}/lib/openws-1.4.1.jar" todir="../../sc3tc5/apiproxy/resources/java" />
+                                                  <copy file="${project.build.directory}/lib/xmlsec-1.3.0.jar" todir="../../sc3tc5/apiproxy/resources/java" />
+                                                  <copy file="${project.build.directory}/${project.artifactId}.jar" todir="../../sc3tc5/apiproxy/resources/java" />
+                     </tasks>
+                  </configuration>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+</project>

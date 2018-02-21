@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope
+    xmlns:sch="http://zionsbank.com/soa/customer/isRegOInsider.1.0/schema"
+    xmlns:sch1="http://zionsbank.com/soa/common1.1/schema"
+    xmlns:sch2="http://zionsbank.com/soa/common1.3/schema"
+    xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soap:Body>
+    <sch:isRegOInsider>
+      <sch:IsRegOInsiderRequest>
+        <sch1:CorrelationId>test</sch1:CorrelationId>
+        <sch2:Channel>Internet</sch2:Channel>
+        <sch1:ClientUserId>test_user</sch1:ClientUserId>
+        <sch2:ApplicationId>InternetBanking</sch2:ApplicationId>
+        <sch1:RequestDateTime>2008-11-15T09:52:58</sch1:RequestDateTime>
+        <sch:Tin>111111111</sch:Tin>
+      </sch:IsRegOInsiderRequest>
+    </sch:isRegOInsider>
+  </soap:Body>
+</soap:Envelope>
