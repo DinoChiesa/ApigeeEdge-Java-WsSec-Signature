@@ -1,0 +1,46 @@
+ <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sch="http://zionsbank.com/soa/customer/isRegOInsider.1.0/schema" xmlns:sch1="http://zionsbank.com/soa/common1.1/schema" xmlns:sch2="http://zionsbank.com/soa/common1.3/schema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soap:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" soap:mustUnderstand="1">
+      <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-29060399-3e3d-4a3b-b4ee-11710473ced1">
+        <ds:SignedInfo>
+          <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+            <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="sch sch1 sch2 soap xsd xsi"/>
+          </ds:CanonicalizationMethod>
+          <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#dsa-sha1"/>
+          <ds:Reference URI="#id-e050ed05-0a84-4421-ad29-076de793a945">
+            <ds:Transforms>
+              <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="sch sch1 sch2 xsd xsi"/>
+              </ds:Transform>
+            </ds:Transforms>
+            <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+            <ds:DigestValue>8U3vPtWDy/ofTVJiBAJZrXiBFkg=</ds:DigestValue>
+          </ds:Reference>
+        </ds:SignedInfo>
+        <ds:SignatureValue>Sf21KV71fTpArQYrehSCzgTJDzw3s6+GuTUCoaQ5WJr1C1J1ZVALKA==</ds:SignatureValue>
+        <ds:KeyInfo Id="KI-cdc43905-307a-4887-b7ed-bec5fc905aa0">
+          <wsse:SecurityTokenReference wsu:Id="STR-c688b0a5-4a28-4fad-b856-6b91e9ad146b">
+            <ds:X509Data>
+              <ds:X509IssuerSerial>
+                <ds:X509IssuerName>CN=Dino,OU=Apigee,O=Google Cloud,L=Kirkland,ST=WA,C=US</ds:X509IssuerName>
+                <ds:X509SerialNumber>1889872742</ds:X509SerialNumber>
+              </ds:X509IssuerSerial>
+            </ds:X509Data>
+          </wsse:SecurityTokenReference>
+        </ds:KeyInfo>
+      </ds:Signature>
+    </wsse:Security>
+  </soap:Header>
+  <soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-e050ed05-0a84-4421-ad29-076de793a945">
+    <sch:isRegOInsider>
+      <sch:IsRegOInsiderRequest>
+        <sch1:CorrelationId>test</sch1:CorrelationId>
+        <sch2:Channel>Internet</sch2:Channel>
+        <sch1:ClientUserId>test_user</sch1:ClientUserId>
+        <sch2:ApplicationId>InternetBanking</sch2:ApplicationId>
+        <sch1:RequestDateTime>2008-11-15T09:52:58</sch1:RequestDateTime>
+        <sch:Tin>111111111</sch:Tin>
+      </sch:IsRegOInsiderRequest>
+    </sch:isRegOInsider>
+  </soap:Body>
+</soap:Envelope>

@@ -26,10 +26,30 @@ public class XmlUtil {
     /**
      * Convert an XML Document as a String to a org.w3c.dom.Document.
      */
-    public static Document toDocument(String xml) throws Exception {
-        InputStream in = new ByteArrayInputStream(xml.getBytes());
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        return builder.parse(in);
+    public static Document toDocument(String xml) {
+        try {
+            InputStream in = new ByteArrayInputStream(xml.getBytes());
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            return builder.parse(in);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String toString(Document document) {
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            StringWriter stringWriter = new StringWriter();
+            transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
+            return stringWriter.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String toPrettyString(String content) {
+        return XmlUtil.toPrettyString(XmlUtil.toDocument(content));
     }
 
     public static String toPrettyString(Document document) {

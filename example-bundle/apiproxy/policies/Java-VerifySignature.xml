@@ -1,4 +1,4 @@
-<JavaCallout name='Java-SignSoapDoc'>
+<JavaCallout name='Java-VerifySignature'>
   <Properties>
     <Property name='alias'>apigee</Property>
     <Property name='password'>Secret123</Property>
@@ -7,6 +7,6 @@
     <Property name='password'>{private.password}</Property>
     -->
   </Properties>
-  <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
+  <ClassName>com.google.apigee.callout.wssec.SOAPVerifier</ClassName>
   <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
 </JavaCallout>

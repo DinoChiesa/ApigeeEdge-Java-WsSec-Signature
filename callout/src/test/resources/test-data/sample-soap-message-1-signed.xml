@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://mybank.com/20180223/Customer" xmlns:ns2="http://mybank.com/20180223/common"><soap:Header><wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" soap:mustUnderstand="1"><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-1d978dea-5492-42e2-9997-e1579ed650e6"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"><ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="ns1 ns2 soap"/></ds:CanonicalizationMethod><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#dsa-sha1"/><ds:Reference URI="#id-a2a49d86-862b-443e-8f7f-d3a812dc8342"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"><ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="ns1 ns2"/></ds:Transform></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>7TtCb/uZwTbGTXtSfG0KZgkteh8=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>kPQXSuXOchn/dv1blfeO/76p21sCsqVdEHR4ThZxX7O/iAUrcU9xcw==</ds:SignatureValue><ds:KeyInfo Id="KI-f6f7a2fd-9f7c-4ecd-8cea-51715fee6b40"><wsse:SecurityTokenReference wsu:Id="STR-5dc6d5d4-d8a3-4824-9af9-0ef3054fd199"><ds:X509Data><ds:X509IssuerSerial><ds:X509IssuerName>CN=Dino,OU=Apigee,O=Google Cloud,L=Kirkland,ST=WA,C=US</ds:X509IssuerName><ds:X509SerialNumber>1889872742</ds:X509SerialNumber></ds:X509IssuerSerial></ds:X509Data></wsse:SecurityTokenReference></ds:KeyInfo></ds:Signature></wsse:Security></soap:Header>
+  <soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="id-a2a49d86-862b-443e-8f7f-d3a812dc8342">
+    <ns1:AccountCheck>
+      <ns1:AccountCheckRequest>
+        <ns2:CorrelationId>test</ns2:CorrelationId>
+        <ns2:Channel>Internet</ns2:Channel>
+        <ns2:ClientUserId>test_user</ns2:ClientUserId>
+        <ns2:ApplicationId>InternetBanking</ns2:ApplicationId>
+        <ns2:RequestDateTime>2008-11-15T09:52:58</ns2:RequestDateTime>
+        <ns1:Tin>111111111</ns1:Tin>
+      </ns1:AccountCheckRequest>
+    </ns1:AccountCheck>
+  </soap:Body>
+</soap:Envelope>

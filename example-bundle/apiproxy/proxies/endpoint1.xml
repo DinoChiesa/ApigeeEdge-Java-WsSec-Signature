@@ -34,7 +34,7 @@
       <Response>
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
-      <Condition>(proxy.pathsuffix ~ "/t1") and (request.verb = "POST")</Condition>
+      <Condition>(proxy.pathsuffix ~ "/sign1") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='sign-2'>
@@ -45,7 +45,29 @@
       <Response>
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
-      <Condition>(proxy.pathsuffix ~ "/t2") and (request.verb = "POST")</Condition>
+      <Condition>(proxy.pathsuffix ~ "/sign2") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='verify-1'>
+      <Description>verify WS-Sec signature of SOAP body</Description>
+      <Request>
+        <Step><Name>Java-VerifySignature</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-GoodResponse</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix ~ "/verify1") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='verify-2'>
+      <Description>verify WS-Sec signature of SOAP body</Description>
+      <Request>
+        <Step><Name>Java-VerifySignature-BYOJKS</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-GoodResponse</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix ~ "/verify2") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='unknown'>

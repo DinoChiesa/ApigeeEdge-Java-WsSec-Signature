@@ -1,10 +1,7 @@
-<JavaCallout name='Java-SignSoapDoc-BYOJKS'>
+<JavaCallout name='Java-VerifySignature-BYOJKS'>
   <Properties>
     <Property name='alias'>my-key-alias</Property>
     <Property name='password'>Secret123</Property>
-    <!-- this is the base64-encoded JKS file, generated with
-         openssl base64 -in soadev.jks -out jks.bin
-         -->
     <Property name='jks-base64'>
       /u3+7QAAAAIAAAABAAAAAQAMbXkta2V5LWFsaWFzAAABYbnEZOYAAAUCMIIE/jAO
       BgorBgEEASoCEQEBBQAEggTqnnD8kh66XIABAyAK2L0nLUm3z0jEFLiYgKXE8YhK
@@ -56,6 +53,6 @@
       +qA=
     </Property>
   </Properties>
-  <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
+  <ClassName>com.google.apigee.callout.wssec.SOAPVerifier</ClassName>
   <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
 </JavaCallout>

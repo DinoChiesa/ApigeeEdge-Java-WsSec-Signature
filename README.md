@@ -74,11 +74,11 @@ Df5F+vmR9pnA1oJkJJA6O2qVOtezyfZAuvrnuQ==</ds:SignatureValue>
 This example is not an official Google product, nor is it part of an official Google product.
 
 
-## Using this policy
+## Using this Custom policy JAR
 
-To use this policy in Apigee Edge, you do not need to rebuild it. You need only to configure the Callout policy with the appropriate information. 
+To use this JAR in Apigee Edge, you do not need to rebuild it. You need only to configure the Callout policy with the appropriate information.
 
-## Simple Example Configuration
+## Simple Example Configuration: Signing
 
 A simple configuration looks like this:
 
@@ -92,8 +92,8 @@ A simple configuration looks like this:
       <Property name='password'>{private.password}</Property>
     -->
   </Properties>
-  <ClassName>com.google.apigee.callout.wssec.SOAPSignerCallout</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.2.jar</ResourceURL>
+  <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -118,8 +118,8 @@ A better configuration specifies the .JKS file to the callout.
       ....
     </Property>
   </Properties>
-  <ClassName>com.google.apigee.callout.wssec.SOAPSignerCallout</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.2.jar</ResourceURL>
+  <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -153,18 +153,36 @@ KVM, and reference them by variable, like this:
     <Property name='password'>{private.keypassword}</Property>
     <Property name='jks-base64'>{private.jks-base64}</Property>
   </Properties>
-  <ClassName>com.google.apigee.callout.wssec.SOAPSignerCallout</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.2.jar</ResourceURL>
+  <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
 </JavaCallout>
 ```
 
 There is an additional property you can specify if appropriate: jks-password.
 
 
+## Simple Example Configuration: Verifying
+
+A simple configuration looks like this:
+
+```xml
+<JavaCallout name='Java-VerifySignature'>
+  <Properties>
+    <Property name='alias'>apigee</Property>
+    <Property name='password'>Secret123</Property>
+  </Properties>
+  <ClassName>com.google.apigee.callout.wssec.SOAPVerifier</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
+</JavaCallout>
+```
+
+This uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want. See the notes above.
+The output of message.content will be stripped of the WS-Security header.
+
+
 ## Example API Proxy
 
 You can find an example proxy bundle that uses the policy, [here in this repo](example-bundle/apiproxy).
-
 
 
 ## Building

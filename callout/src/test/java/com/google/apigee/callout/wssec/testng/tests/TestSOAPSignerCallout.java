@@ -19,12 +19,8 @@ import com.apigee.flow.execution.ExecutionContext;
 import com.apigee.flow.execution.ExecutionResult;
 import com.apigee.flow.message.Message;
 import com.apigee.flow.message.MessageContext;
-// import com.fasterxml.jackson.databind.DeserializationFeature;
-// import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.google.apigee.edgecallouts.EditXmlNode;
-
-import com.google.apigee.callout.wssec.SOAPSignerCallout;
-
+import com.google.apigee.callout.wssec.SOAPSigner;
+import com.google.apigee.callout.wssec.XmlUtil;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -44,9 +40,16 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.DifferenceEvaluators;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.ElementSelectors;
 
 public class TestSOAPSignerCallout {
     private final static String testDataDir = "src/test/resources/test-data";
+    private boolean verbose = false;
 
     MessageContext msgCtxt;
     String messageContent;
@@ -186,59 +189,31 @@ public class TestSOAPSignerCallout {
         props.put("debug", "true");
         props.put("alias", "apigee");
         props.put("password", "Secret123");
-        SOAPSignerCallout callout = new SOAPSignerCallout(props);
+        SOAPSigner callout = new SOAPSigner(props);
 
         // execute and retrieve output
         ExecutionResult actualResult = callout.execute(msgCtxt, exeCtxt);
         String actualContent = msgCtxt.getVariable("message.content");
-        System.out.printf("content: %s\n", actualContent);
-    }
 
-    // @Test(dataProvider = "batch1")
-    // public void test2_Configs(TestCase tc) {
-    //     if (tc.getDescription()!= null)
-    //         System.out.printf("  %10s - %s\n", tc.getTestName(), tc.getDescription() );
-    //     else
-    //         System.out.printf("  %10s\n", tc.getTestName() );
-    //
-    //     messageContent = tc.getInput().get("message-content");
-    //
-    //     EditXmlNode callout = new EditXmlNode(tc.getInput());  // properties
-    //
-    //     // execute and retrieve output
-    //     ExecutionResult actualResult = callout.execute(msgCtxt, exeCtxt);
-    //     String actualContent = msgCtxt.getVariable("message.content");
-    //
-    //     String s = tc.getExpected().get("success");
-    //     ExecutionResult expectedResult = (s!=null && s.toLowerCase().equals("true")) ?
-    //                                        ExecutionResult.SUCCESS : ExecutionResult.ABORT;
-    //     // check result and output
-    //     if (expectedResult == actualResult) {
-    //         if (expectedResult == ExecutionResult.SUCCESS) {
-    //             String expectedContent = tc.getExpected().get("message-content");
-    //             expectedContent = expectedContent.replace('\'','"');
-    //             if (actualContent.equals(expectedContent)) {
-    //             }
-    //             else {
-    //                 //System.out.printf("  FAIL - content\n");
-    //                 System.err.printf("    got: %s\n", actualContent);
-    //                 System.err.printf("    expected: %s\n", expectedContent);
-    //                 // the following will throw
-    //                 Assert.assertEquals(actualContent, expectedContent, "result not as expected");
-    //             }
-    //         }
-    //         else {
-    //             String expectedError = tc.getExpected().get("error");
-    //             if (expectedError != null) {
-    //                 String actualError = msgCtxt.getVariable("editxml_error");
-    //                 Assert.assertEquals(actualError, expectedError, "error not as expected");
-    //             }
-    //         }
-    //     }
-    //     else {
-    //         Assert.assertEquals(actualResult, expectedResult, "result not as expected");
-    //     }
-    //     System.out.println("=========================================================");
-    // }
+        String expectedContent = readFile("sample-soap-message-1-signed.xml");
+
+        if (verbose)
+        System.out.printf("\n\n** ACTUAL:\n%s\n\nEXPECTED:\n%s\n\n",
+                          XmlUtil.toPrettyString(actualContent), XmlUtil.toPrettyString(expectedContent));
+
+        // Diff diff = DiffBuilder
+        //     .compare(Input.fromString(actualContent))
+        //     .withTest(Input.fromString(expectedContent))
+        //     .withDifferenceEvaluator(
+        //      DifferenceEvaluators.chain(
+        //          DifferenceEvaluators.Default,
+        //          new AttrIgnoringDiffEvaluator()))
+        //     .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText))
+        //     .build();
+        //
+        // Assert.assertFalse(diff.hasDifferences(), "XML similar " + diff.toString() );
+
+        //XMLAssert.assertXMLEqual("result is not as expected", actualContent.trim(), expectedContent.trim() );
+    }
 
 }
