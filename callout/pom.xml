@@ -198,6 +198,8 @@ mvn install:install-file \
                     already included in the Edge runtime: -->
                     <include name="lib/wss4j-ws-security-common-${wss4j.version}.jar"/>
                     <include name="lib/wss4j-ws-security-dom-${wss4j.version}.jar"/>
+                    <include name="lib/wss4j-ws-security-stax-${wss4j.version}.jar"/>
+                    <include name="lib/wss4j-bindings-${wss4j.version}.jar"/>
                     <include name="lib/commons-lang3-${commonslang.version}.jar"/>
                     <include name="lib/xmlsec-2.1.1.jar"/>
 

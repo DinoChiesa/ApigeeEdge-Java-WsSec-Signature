@@ -38,7 +38,7 @@
     </Flow>
 
     <Flow name='sign-2'>
-      <Description>sign SOAP body</Description>
+      <Description>sign SOAP body - specify JKS</Description>
       <Request>
         <Step><Name>Java-SignSoapDoc-BYOJKS</Name></Step>
       </Request>
@@ -46,6 +46,18 @@
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
       <Condition>(proxy.pathsuffix ~ "/sign2") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='sign-3'>
+      <Description>sign SOAP body - retrieve JKS from KVM</Description>
+      <Request>
+        <Step><Name>KVM-GetJks</Name></Step>
+        <Step><Name>Java-SignSoapDoc-KVMJKS</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-GoodResponse</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix ~ "/sign3") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='verify-1'>
@@ -60,7 +72,7 @@
     </Flow>
 
     <Flow name='verify-2'>
-      <Description>verify WS-Sec signature of SOAP body</Description>
+      <Description>verify WS-Sec signature of SOAP body - BYO JKS</Description>
       <Request>
         <Step><Name>Java-VerifySignature-BYOJKS</Name></Step>
       </Request>
@@ -68,6 +80,18 @@
         <Step><Name>AM-GoodResponse</Name></Step>
       </Response>
       <Condition>(proxy.pathsuffix ~ "/verify2") and (request.verb = "POST")</Condition>
+    </Flow>
+
+    <Flow name='verify-3'>
+      <Description>verify WS-Sec signature of SOAP body with KVM JKS</Description>
+      <Request>
+        <Step><Name>KVM-GetJks</Name></Step>
+        <Step><Name>Java-VerifySignature-KVMJKS</Name></Step>
+      </Request>
+      <Response>
+        <Step><Name>AM-GoodResponse</Name></Step>
+      </Response>
+      <Condition>(proxy.pathsuffix ~ "/verify3") and (request.verb = "POST")</Condition>
     </Flow>
 
     <Flow name='unknown'>

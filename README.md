@@ -142,7 +142,6 @@ On MacOS, you can do the encoding of the resulting .jks file like this:
 In this case, the sample .jks that is compiled into the JAR is not used to sign the payload. Instead the
 .jks specified by the base64 string is used.
 
-
 Best practice is to store those parameters in the encrypted
 KVM, and reference them by variable, like this:
 
@@ -175,8 +174,9 @@ A simple configuration looks like this:
   <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
 </JavaCallout>
 ```
+Note the different classname: SOAPVerifier not SOAPSigner.
 
-This uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want. See the notes above.
+This configuration uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want. See the notes above; the same things apply to the verify class.
 The output of message.content will be stripped of the WS-Security header.
 
 
@@ -184,10 +184,21 @@ The output of message.content will be stripped of the WS-Security header.
 
 You can find an example proxy bundle that uses the policy, [here in this repo](example-bundle/apiproxy).
 
+To use it, you can deploy it with [the importAndDeploy tool](./tools/importAndDeploy.js) in [the tools directory](./tools):
+```
+cd tools
+node ./importAndDeploy.js -v -n -o amer-demo4 -e test -d ../example-bundle/
+```
+
+You can also provision a JKS into the KVM, to be used by the example proxy, with a tool in that directory:
+```
+node ./provisionKvm.js -F larry-page.jks -A my-key-alias -P Secret123 -o amer-demo4 -e test -v -n -f
+```
+
 
 ## Building
 
-Building from source requires Java 1.8, and Maven.
+You don't need to build this JAR from source. If you want to, building from source requires Java 1.8, and Maven.
 
 1. unpack (if you can read this, you've already done that).
 
@@ -200,9 +211,7 @@ Building from source requires Java 1.8, and Maven.
   ```
   mvn clean package
   ```
-  This will build the jar and also run all the tests.
-
-
+  This will build the jar and also run the tests.
 
 
 ## License
@@ -213,6 +222,5 @@ the API Proxy configuration.
 
 ## Bugs
 
-* You must include your own .jks file in order to use this. I haven't yet figured out how to configure it to use a PEM-encoded certificate.
-* The tests don't actually verify the signature.
+* The tests could be more rigorous
 

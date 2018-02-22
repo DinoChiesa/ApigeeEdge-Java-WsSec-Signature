@@ -1,0 +1,19 @@
+<KeyValueMapOperations name='KVM-GetJks' mapIdentifier='jkssecrets'>
+  <Scope>environment</Scope>
+  <ExpiryTimeInSecs>300</ExpiryTimeInSecs>
+  <Get assignTo='private.jksbase64'>
+    <Key>
+      <Parameter>jks-base64</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo='private.jksalias'>
+    <Key>
+      <Parameter>jks-alias</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo='private.jkspassword'>
+    <Key>
+      <Parameter>jks-password</Parameter>
+    </Key>
+  </Get>
+</KeyValueMapOperations>

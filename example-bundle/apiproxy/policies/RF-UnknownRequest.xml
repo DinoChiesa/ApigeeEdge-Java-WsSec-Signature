@@ -2,12 +2,18 @@
   <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
   <FaultResponse>
     <Set>
-      <Payload contentType='application/json'
-               variablePrefix='%'
-               variableSuffix='#'><![CDATA[{
-  "error": "unknown request. POST to /t1"
+      <Payload contentType='application/json'>{
+  "error": "unknown request.",
+  "legal_urls": [
+    "POST to /sign1 - sign with JKS compiled into the JAR",
+    "POST to /sign2 - sign with JKS specified in policy config",
+    "POST to /sign3 - sign with KVM-stored JKS"
+    "POST to /verify1 - verify signature with JKS compiled into the JAR",
+    "POST to /verify2 - verify with JKS specified in policy config",
+    "POST to /verify3 - verify with with KVM-stored JKS"
+  ]
 }
-]]></Payload>
+</Payload>
       <StatusCode>404</StatusCode>
       <ReasonPhrase>Not Found</ReasonPhrase>
     </Set>
