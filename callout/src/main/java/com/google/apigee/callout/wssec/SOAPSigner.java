@@ -36,8 +36,16 @@ public class SOAPSigner extends WsSecCalloutBase implements Execution {
             options.password = getSimpleRequiredProperty("password", msgCtxt);
             String jksBase64 = getSimpleOptionalProperty("jks-base64", msgCtxt);
             if (jksBase64 != null) {
+                if (jksBase64.equals("")) {
+                    msgCtxt.setVariable(varName("error"), "empty jks-base64 property");
+                    return ExecutionResult.ABORT;
+                }
                 options.jksStream = new Base64InputStream(new ByteArrayInputStream(normalizeString(jksBase64).getBytes(StandardCharsets.UTF_8)));
                 options.jksPassword = getSimpleOptionalProperty("jks-password", msgCtxt);
+            }
+            else {
+                msgCtxt.setVariable(varName("error"), "empty jks-base64 property");
+                return ExecutionResult.ABORT;
             }
             String signedMessage = signer.signMessage(msgContent, options);
             String outputVar = getOutputVar(msgCtxt);

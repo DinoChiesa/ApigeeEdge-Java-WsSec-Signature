@@ -6,13 +6,8 @@ import com.apigee.flow.execution.spi.Execution;
 import com.apigee.flow.message.Message;
 import com.apigee.flow.message.MessageContext;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -34,8 +29,16 @@ public class SOAPVerifier extends WsSecCalloutBase implements Execution {
             options.password = getSimpleRequiredProperty("password", msgCtxt);
             String jksBase64 = getSimpleOptionalProperty("jks-base64", msgCtxt);
             if (jksBase64 != null) {
+                if (jksBase64.equals("")) {
+                    msgCtxt.setVariable(varName("error"), "empty jks-base64 property");
+                    return ExecutionResult.ABORT;
+                }
                 options.jksStream = new Base64InputStream(new ByteArrayInputStream(normalizeString(jksBase64).getBytes(StandardCharsets.UTF_8)));
                 options.jksPassword = getSimpleOptionalProperty("jks-password", msgCtxt);
+            }
+            else {
+                msgCtxt.setVariable(varName("error"), "empty jks-base64 property");
+                return ExecutionResult.ABORT;
             }
             String signedMessage = verifier.verifyAndStrip(msgContent, options);
             String outputVar = getOutputVar(msgCtxt);

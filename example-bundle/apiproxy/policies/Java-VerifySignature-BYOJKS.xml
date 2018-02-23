@@ -54,5 +54,5 @@
     </Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPVerifier</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
 </JavaCallout>

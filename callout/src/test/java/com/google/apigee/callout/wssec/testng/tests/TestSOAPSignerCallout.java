@@ -198,8 +198,12 @@ public class TestSOAPSignerCallout {
         String expectedContent = readFile("sample-soap-message-1-signed.xml");
 
         if (verbose)
-        System.out.printf("\n\n** ACTUAL:\n%s\n\nEXPECTED:\n%s\n\n",
-                          XmlUtil.toPrettyString(actualContent), XmlUtil.toPrettyString(expectedContent));
+            System.out.printf("\n\n** ACTUAL:\n%s\n\nEXPECTED:\n%s\n\n",
+                              XmlUtil.toPrettyString(actualContent), XmlUtil.toPrettyString(expectedContent));
+
+        // I haven't figured out how to do meaningful diffs to make sure
+        // the signed payload is correct. Each WS-Sec header will have unique element IDs
+        // and there's a way to get XMLUnit to accept that, but I don't know the way.
 
         // Diff diff = DiffBuilder
         //     .compare(Input.fromString(actualContent))
@@ -214,6 +218,24 @@ public class TestSOAPSignerCallout {
         // Assert.assertFalse(diff.hasDifferences(), "XML similar " + diff.toString() );
 
         //XMLAssert.assertXMLEqual("result is not as expected", actualContent.trim(), expectedContent.trim() );
+    }
+
+    @Test
+    public void testEmptyJksStream() throws IOException {
+        messageContent = readFile("sample-soap-message-1.xml");
+
+        Map props = new HashMap<String,String>();
+        props.put("debug", "true");
+        props.put("alias", "apigee");
+        props.put("password", "Secret123");
+        props.put("jks-base64", "{non.existent.variable}");
+        SOAPSigner callout = new SOAPSigner(props);
+
+        // execute callout - this should throw
+        ExecutionResult actualResult = callout.execute(msgCtxt, exeCtxt);
+        String wssec_error = msgCtxt.getVariable("wssec_error");
+
+        Assert.assertEquals(wssec_error, "empty jks-base64 property", "JKS variable");
     }
 
 }

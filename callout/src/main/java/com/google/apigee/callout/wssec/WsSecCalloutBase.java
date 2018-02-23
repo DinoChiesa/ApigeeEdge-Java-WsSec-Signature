@@ -52,29 +52,34 @@ public abstract class WsSecCalloutBase {
     }
 
     protected String getSimpleOptionalProperty(String propName, MessageContext msgCtxt) throws Exception {
-        String value = (String) this.properties.get(propName);
+        Object value = this.properties.get(propName);
         if (value == null) { return null; }
-        value = value.trim();
-        if (value.equals("")) { return null; }
-        value = resolvePropertyValue(value, msgCtxt);
-        if (value == null || value.equals("")) { return null; }
-        return value;
+        String v = (String) value;
+        v = v.trim();
+        if (v.equals("")) { return null; }
+        v = resolvePropertyValue(v, msgCtxt);
+        if (v == null || v.equals("")) { return null; }
+        return v;
     }
 
     // If the value of a property contains a pair of curlies,
     // eg, {apiproxy.name}, then "resolve" the value by de-referencing
     // the context variable whose name appears between the curlies.
+    // If the variable name is not known, then it returns a null. 
     protected String resolvePropertyValue(String spec, MessageContext msgCtxt) {
         Matcher matcher = variableReferencePattern.matcher(spec);
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
             matcher.appendReplacement(sb, "");
             sb.append(matcher.group(1));
-            sb.append((String) msgCtxt.getVariable(matcher.group(2)));
+            Object v = msgCtxt.getVariable(matcher.group(2));
+            if (v != null){
+                sb.append((String) v );
+            }
             sb.append(matcher.group(3));
         }
         matcher.appendTail(sb);
-        return sb.toString();
+        return (sb.length() > 0) ? sb.toString() : null;
     }
 
 }

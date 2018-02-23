@@ -138,4 +138,23 @@ public class TestSOAPVerifierCallout {
         // I could not figure out how to remove.
         //Assert.assertEquals(XmlUtil.toPrettyString(actualContent), XmlUtil.toPrettyString(originalMessage));
     }
+
+    @Test
+    public void testEmptyJksStream() throws IOException {
+        messageContent = readFile("sample-soap-message-1.xml");
+
+        Map props = new HashMap<String,String>();
+        props.put("debug", "true");
+        props.put("alias", "apigee");
+        props.put("password", "Secret123");
+        props.put("jks-base64", "{non.existent.variable}");
+        SOAPVerifier callout = new SOAPVerifier(props);
+
+        // execute callout - this should throw
+        ExecutionResult actualResult = callout.execute(msgCtxt, exeCtxt);
+        String wssec_error = msgCtxt.getVariable("wssec_error");
+
+        Assert.assertEquals(wssec_error, "empty jks-base64 property", "JKS variable");
+    }
+
 }

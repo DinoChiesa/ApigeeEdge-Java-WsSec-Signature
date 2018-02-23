@@ -21,7 +21,7 @@ It will be simple to add on other options. For example, right now there is the p
     <Property name='include-signature-token'>true</Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPSignerCallout</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.1.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
 

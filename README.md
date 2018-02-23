@@ -76,7 +76,8 @@ This example is not an official Google product, nor is it part of an official Go
 
 ## Using this Custom policy JAR
 
-To use this JAR in Apigee Edge, you do not need to rebuild it. You need only to configure the Callout policy with the appropriate information.
+To use this JAR in Apigee Edge, you do not need to rebuild it. You need
+only to configure the Callout policy with the appropriate information.
 
 ## Simple Example Configuration: Signing
 
@@ -93,7 +94,7 @@ A simple configuration looks like this:
     -->
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -119,7 +120,7 @@ A better configuration specifies the .JKS file to the callout.
     </Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -153,7 +154,7 @@ KVM, and reference them by variable, like this:
     <Property name='jks-base64'>{private.jks-base64}</Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -171,9 +172,10 @@ A simple configuration looks like this:
     <Property name='password'>Secret123</Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPVerifier</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.3.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
 </JavaCallout>
 ```
+
 Note the different classname: SOAPVerifier not SOAPSigner.
 
 This configuration uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want. See the notes above; the same things apply to the verify class.
