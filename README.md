@@ -216,6 +216,14 @@ You don't need to build this JAR from source. If you want to, building from sour
   This will build the jar and also run the tests.
 
 
+
+## Support
+
+This callout is open-source software, and is not a supported part of Apigee Edge.
+If you need assistance, you can try inquiring on
+[The Apigee Community Site](https://community.apigee.com).  There is no service-level
+guarantee for responses to inquiries regarding this callout.
+
 ## License
 
 This material is copyright 2018 Google Inc.  and is licensed under the
