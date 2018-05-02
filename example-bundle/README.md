@@ -67,6 +67,6 @@ pPVkzhITqTHMMzssPlrd6xHy3gqWnq17DdcScA==</ds:SignatureValue><ds:KeyInfo Id="KI-5
 
 ## Notes
 
-* If you modify the sogmed payload in any way, before passing it to the callout for verification, the verification will fail. For example if you "pretty print" the WS-Security header, inserting whitespace, the subsequent verification will fail.  So don't do that. Sometimes tools like Postman can pretty print things for you. Be aware.
+* If you modify the signed payload in any way before passing it to the callout for verification, the verification will fail. For example if you "pretty print" the WS-Security header, inserting whitespace between elements or attributes, the subsequent verification will fail.  So don't do that. Sometimes tools like Postman can silently pretty print things for you. Be aware.
 
 Happy Signing!
