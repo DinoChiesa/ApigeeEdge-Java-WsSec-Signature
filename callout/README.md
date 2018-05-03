@@ -36,7 +36,7 @@ To add other extensions and options, modify the [Signer.java](./src/main/java/co
 
 ## Note
 
-You cannot "pretty print" the signed payload and get a successful verification.
+In general, you cannot "pretty print" the signed payload and get a successful verification.
 Modifying the whitespace within the SignedInfo element in the header causes the signature verification to fail.
 
 A full signed payload looks like this:
@@ -65,8 +65,11 @@ You may be tempted to pretty-print that thing, for demos or in your
 app. This would add newlines and whitespace after each end-element and before each begin-element. This will make your signed XML look pretty, but the signature won't verify after that transformation.
 
 [See here](https://lists.w3.org/Archives/Public/w3c-ietf-xmldsig/2002JanMar/0001.html) for some history.
-The short story is, you cannot modify whitespace inside SignedInfo, without invalidating the signature. I still don't understand why that should be required, but there it is. Inserting Whitespace before or after SignedInfo is ok. 
+The short story is, you cannot modify whitespace inside SignedInfo, without invalidating the signature.
 
+The reason for this is, the SignedInfo is the thing that actually gets canonicalized and then signed. The digest within the SignedInfo element represents the Body, but it's just a hash. Injecting whitespace there will cause the signing base to change.
+
+Inserting Whitespace before or after SignedInfo is ok.
 
 This is ok, allows signature verification to succeed.
 ```
