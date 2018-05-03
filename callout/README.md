@@ -67,7 +67,7 @@ app. This would add newlines and whitespace after each end-element and before ea
 [See here](https://lists.w3.org/Archives/Public/w3c-ietf-xmldsig/2002JanMar/0001.html) for some history.
 The short story is, you cannot modify whitespace inside SignedInfo, without invalidating the signature.
 
-The reason for this is, the SignedInfo is the thing that actually gets canonicalized and then signed. The digest within the SignedInfo element represents the Body, but it's just a hash. Injecting whitespace there will cause the signing base to change.
+The reason for this is, the SignedInfo is the thing that actually gets canonicalized and then signed. You might think the Body element is canonicalized and signed - not so.  The digest within the SignedInfo element represents the hash of the Body, and protects its integrity. Injecting whitespace into the SignedInfo element will cause the signing base to change, and the signature will not match.
 
 Inserting Whitespace before or after SignedInfo is ok.
 
