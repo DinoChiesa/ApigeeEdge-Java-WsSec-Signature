@@ -1,0 +1,4 @@
+for jks-base64.txt:
+
+alias: my-key-alias
+password: Secret123
