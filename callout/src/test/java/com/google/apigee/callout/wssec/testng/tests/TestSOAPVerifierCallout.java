@@ -167,9 +167,13 @@ public class TestSOAPVerifierCallout {
     }
 
 
-    // I could not get the following test to work. If I pretty-print the
-    // signed output, changing whitespace in the WS-Sec HEADER, the
-    // signature validation fails.
+    // Pretty-printing the signed output, which changes the whitespace
+    // in the WS-Sec HEADER, causes the signature validation to fail.
+    //
+    // Modifying any whitespace within the SignedInfo element in the
+    // header causes the signature verification to fail.
+    //
+    // This is by design.
     //
     // @Test
     // public void testVerify_PrettyXml() throws Exception {
@@ -180,15 +184,10 @@ public class TestSOAPVerifierCallout {
     //     options.jksStream = fileToInputStream("jks-base64.txt");
     //     Signature signer = new Signature();
     //     messageContent = signer.signMessage(originalMessage, options);
-    //     System.out.printf("\n**\nsigned content:\n'%s'\n", messageContent);
+    //     //System.out.printf("\n**\nsigned content:\n'%s'\n", messageContent);
     //
-    //     // String substring1 = lastN(messageContent,332);
-    //     // // This will work only if the pretty version indents the signed portion of the content
-    //     // // in exactly the same way as the signed version.
-    //     // messageContent = XmlUtil.toPrettyString(messageContent).trim();
-    //     // System.out.printf("\npretty version:\n'%s'\n", messageContent);
-    //     // String substring2 = lastN(messageContent,332);
-    //     // System.out.printf("suffix equals?: '%s'\n", substring1.equals(substring2));
+    //     messageContent = XmlUtil.toPrettyString(messageContent).trim();
+    //     System.out.printf("\npretty version:\n'%s'\n", messageContent);
     //
     //     Map props = new HashMap<String,String>();
     //     props.put("debug", "true");
@@ -234,7 +233,7 @@ public class TestSOAPVerifierCallout {
 
     @Test
     public void testVerify_SemiPrettyXml() throws Exception {
-        // inserting a whitespace (newline) between SignedInfo and CanonicalizationMethod
+        // Modifying any whitespace within the SignedInfo element
         // in the header causes the signature verification to fail.
         messageContent = readFile("1-signed-semi-pretty.xml");
         System.out.printf("\n**\nsigned content:\n'%s'\n", messageContent);

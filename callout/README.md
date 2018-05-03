@@ -37,7 +37,7 @@ To add other extensions and options, modify the [Signer.java](./src/main/java/co
 ## Note
 
 You cannot "pretty print" the signed payload and get a successful verification.
-I found that inserting a space between SignedInfo and CanonicalizationMethod in the header causes the signature verification to fail.
+Modifying the whitespace within the SignedInfo element in the header causes the signature verification to fail.
 
 A full signed payload looks like this:
 ```
@@ -62,7 +62,11 @@ Notice that the XML for the wsse:Security element is all on one line,
 except for the linebreaks in the base64-encoded SignatureValue.
 
 You may be tempted to pretty-print that thing, for demos or in your
-app. It won't work.
+app. This would add newlines and whitespace after each end-element and before each begin-element. This will make your signed XML look pretty, but the signature won't verify after that transformation.
+
+[See here](https://lists.w3.org/Archives/Public/w3c-ietf-xmldsig/2002JanMar/0001.html) for some history.
+The short story is, you cannot modify whitespace inside SignedInfo, without invalidating the signature. I still don't understand why that should be required, but there it is. Inserting Whitespace before or after SignedInfo is ok. 
+
 
 This is ok, allows signature verification to succeed.
 ```
@@ -75,5 +79,5 @@ This is not ok, sig verification fails:
       <ds:CanonicalizationMethod Algorithm="...
 ```
 
-That seems really lame to me, but I didn't figure out how/why that makes a difference in the underlying xml signature libraries.
+
 
