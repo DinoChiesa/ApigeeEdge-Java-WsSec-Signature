@@ -196,8 +196,9 @@ A simple configuration looks like this:
 ```xml
 <JavaCallout name='Java-VerifySignature'>
   <Properties>
-    <Property name='alias'>apigee</Property>
-    <Property name='password'>Secret123</Property>
+    <Property name='alias'>{private.keyalias}</Property>
+    <Property name='password'>{private.keypassword}</Property>
+    <Property name='jks-base64'>{private.jks-base64}</Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPVerifier</ClassName>
   <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
@@ -206,7 +207,8 @@ A simple configuration looks like this:
 
 Note the different classname: SOAPVerifier not SOAPSigner.
 
-This configuration uses the "compiled-in" .jks file, to sign a payload. Again, this is probably not what you want. See the notes above; specify the .jks in the same way as described there.
+This configuration uses parameters set into private variable, to verify a payload. See the notes above for a discussion of extracting those things from the Apigee Edge KVM.
+
 
 Note: This policy transforms the message. When using verification, the output of message.content will be stripped of the WS-Security header.
 
