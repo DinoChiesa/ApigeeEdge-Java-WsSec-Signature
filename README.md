@@ -2,9 +2,9 @@
 
 This directory contains a maven project and the Java source code  required to
 compile a simple custom policy for Apigee Edge. The policy
-signs a SOAP document using WSS4J.
+signs a SOAP document using a signature based on an X.509 certificate, or verifies a SOAP document that has been so signed. The implementation uses WSS4J, the well-known Java library for WS-Security.
 
-Suppose you have a document like this:
+For example, suppose you have a document like this:
 ```xml
  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Header/>
@@ -69,6 +69,9 @@ Df5F+vmR9pnA1oJkJJA6O2qVOtezyfZAuvrnuQ==</ds:SignatureValue>
 </soap:Envelope>
 ```
 
+Conversely, if you have a SOAP document that looks like the latter, you can verify the signature, and obtain the
+former, unsigned document.
+
 ## Disclaimer
 
 This example is not an official Google product, nor is it part of an official Google product.
@@ -76,8 +79,9 @@ This example is not an official Google product, nor is it part of an official Go
 
 ## Using this Custom policy JAR
 
-To use this JAR in Apigee Edge, you do not need to rebuild it. You need
-only to configure the Callout policy with the appropriate information.
+To use this JAR in Apigee Edge, you do not need to rebuild it. You need only to
+configure the Callout policy with the appropriate information.  The key thing you will
+need: a java key store (.jks file) containing the key to use to sign.
 
 ## Simple Example Configuration: Signing
 
@@ -98,9 +102,15 @@ A simple configuration looks like this:
 </JavaCallout>
 ```
 
-This uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want.
+The implementation uses Apache's [WSS4J](https://ws.apache.org/wss4j/). As such, it relies on a [Java Key Store](https://docs.oracle.com/javase/9/docs/api/java/security/KeyStore.html).
 
-A better configuration specifies the .JKS file to the callout.
+The parameters for the policy should be clear:
+* The alias is the "key alias"
+* the password is the password on the key.
+
+This configuration uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want. The compiled-in .jks is a sample key, not suitable for production use.
+
+A better configuration explicitly specifies the .JKS file to the callout.
 
 ```xml
 <JavaCallout name='Java-SignSoapDoc-BYOJKS'>
@@ -124,7 +134,9 @@ A better configuration specifies the .JKS file to the callout.
 </JavaCallout>
 ```
 
-That octet stream is the result of base64-encoding a .jks file. To get that, you need to do 2 things.
+The additional parameter there, specifies the data for the java keystore.
+
+The base64 string that appears in the configuration is the result of base64-encoding a .jks file. To get that, you need to do 2 things.
 
 1. generate a JKS
 2. base64 encode it.
@@ -140,11 +152,19 @@ On MacOS, you can do the encoding of the resulting .jks file like this:
  openssl base64 -in my-keystore.jks -out jks.bin
 ```
 
-In this case, the sample .jks that is compiled into the JAR is not used to sign the payload. Instead the
-.jks specified by the base64 string is used.
+On other platforms you can use other similar utilities. For example on Windows, use
+Powershell and the
+[Convert.ToBase64String()](https://msdn.microsoft.com/en-us/library/dhx0d524(v=vs.110).aspx)
+method on the byte contents of the .jks file.
 
-Best practice is to store those parameters in the encrypted
-KVM, and reference them by variable, like this:
+When you specify the base64-encoded JKS in the configuration, the sample .jks that is
+compiled into the JAR is not used to sign the payload. Instead the .jks specified by the
+base64 string is used.
+
+Because the alias, password, and JKS file are secrets, the best practice is to store
+those items in the encrypted KVM inside Apigee Edge. At runtime (in the API Proxy),
+retrieve the data from the KVM, and reference them by variable in the signing policy,
+like this:
 
 ```xml
 <JavaCallout name='Java-SignSoapDoc-BYOJKS'>
@@ -158,7 +178,15 @@ KVM, and reference them by variable, like this:
 </JavaCallout>
 ```
 
-There is an additional property you can specify if appropriate: jks-password.
+There is an additional property you can specify if appropriate: jks-password. Use it like this:
+
+```
+    <Property name='jks-password'>{private.jks-password}</Property>
+```
+
+You would use this if the .jks file itself is protected by a password.
+
+Note: This policy transforms the message. When performing signing, the output of message.content will be the SOAP message with a signature.
 
 
 ## Simple Example Configuration: Verifying
@@ -178,8 +206,9 @@ A simple configuration looks like this:
 
 Note the different classname: SOAPVerifier not SOAPSigner.
 
-This configuration uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want. See the notes above; the same things apply to the verify class.
-The output of message.content will be stripped of the WS-Security header.
+This configuration uses the "compiled-in" .jks file, to sign a payload. Again, this is probably not what you want. See the notes above; specify the .jks in the same way as described there.
+
+Note: This policy transforms the message. When using verification, the output of message.content will be stripped of the WS-Security header.
 
 
 ## Example API Proxy
