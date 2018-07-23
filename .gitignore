@@ -10,6 +10,6 @@ Icon
 **/*~
 
 **/target/
-
+**/node_modules/
 **/*.class
 
