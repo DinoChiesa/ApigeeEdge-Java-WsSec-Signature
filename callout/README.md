@@ -61,8 +61,8 @@ dZMgE+yW69Zy1Ae7MBiLhJWg3U7XHuqTmhg33A==</ds:SignatureValue><ds:KeyInfo Id="KI-9
 Notice that the XML for the wsse:Security element is all on one line,
 except for the linebreaks in the base64-encoded SignatureValue.
 
-You may be tempted to pretty-print that thing, for demos or in your
-app. This would add newlines and whitespace after each end-element and before each begin-element. This will make your signed XML look pretty, but the signature won't verify after that transformation.
+You may be tempted to pretty-print that thing, for demonstration or diagnostic purposes.
+Pretty-printing would add newlines and whitespace in various places in the XML - for example after each end-element and before each begin-element. This will make your signed XML look pretty, but the signature won't verify after that transformation!  Whitespace is significant when computing digital signatures for WS-Sec.
 
 [See here](https://lists.w3.org/Archives/Public/w3c-ietf-xmldsig/2002JanMar/0001.html) for some history.
 The short story is, you cannot modify whitespace inside SignedInfo, without invalidating the signature.

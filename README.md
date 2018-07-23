@@ -79,9 +79,37 @@ This example is not an official Google product, nor is it part of an official Go
 
 ## Using this Custom policy JAR
 
-To use this JAR in Apigee Edge, you do not need to rebuild it. You need only to
-configure the Callout policy with the appropriate information.  The key thing you will
-need: a java key store (.jks file) containing the key to use to sign.
+To use this JAR in Apigee Edge, you do not need to rebuild it.
+
+### JAR dependencies
+
+In your API Proxy you must supply this jar, and all of the its dependencies.  The list of jars that must appear in your resources/java directory (within the API Proxy bundle) is:
+
+* commons-lang3-3.7.jar
+* edge-wssec-sign-x509-1.0.4.jar
+* wss4j-bindings-2.2.1.jar
+* wss4j-ws-security-common-2.2.1.jar
+* wss4j-ws-security-dom-2.2.1.jar
+* wss4j-ws-security-stax-2.2.1.jar
+* xmlsec-2.1.1.jar
+
+
+### Configuring
+
+You will need to configure the Callout policy with the appropriate
+information. You will need: a java key store (.jks file) containing the
+key to use to sign.  The implementation uses Apache's
+[WSS4J](https://ws.apache.org/wss4j/). As such, it relies on a [Java Key
+Store](https://docs.oracle.com/javase/9/docs/api/java/security/KeyStore.html)
+for th ekey.
+
+This jar has a "compiled in", default .jks file.  It will work for
+demonstration purposes, but you probably don't want to use the sample
+.jks file to sign and verify your messages in a real working system.
+
+Think of the .jks as a signing key, or a verification key.  You will
+want your own key, for doing signing and verification.
+
 
 ## Simple Example Configuration: Signing
 
@@ -98,17 +126,17 @@ A simple configuration looks like this:
     -->
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.5.jar</ResourceURL>
 </JavaCallout>
 ```
-
-The implementation uses Apache's [WSS4J](https://ws.apache.org/wss4j/). As such, it relies on a [Java Key Store](https://docs.oracle.com/javase/9/docs/api/java/security/KeyStore.html).
 
 The parameters for the policy should be clear:
 * The alias is the "key alias"
 * the password is the password on the key.
 
-This configuration uses the "compiled-in" .jks file, to sign a payload. This is probably not what you want. The compiled-in .jks is a sample key, not suitable for production use.
+This configuration uses the "compiled-in" .jks file, to sign a
+payload. As stated above, this is probably not what you want. The compiled-in .jks is a
+sample key, not suitable for production use!
 
 A better configuration explicitly specifies the .JKS file to the callout.
 
@@ -130,7 +158,7 @@ A better configuration explicitly specifies the .JKS file to the callout.
     </Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.5.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -174,7 +202,7 @@ like this:
     <Property name='jks-base64'>{private.jks-base64}</Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.5.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -201,7 +229,7 @@ A simple configuration looks like this:
     <Property name='jks-base64'>{private.jks-base64}</Property>
   </Properties>
   <ClassName>com.google.apigee.callout.wssec.SOAPVerifier</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.5.jar</ResourceURL>
 </JavaCallout>
 ```
 
@@ -257,7 +285,7 @@ guarantee for responses to inquiries regarding this callout.
 
 ## License
 
-This material is copyright 2018 Google LLC.  and is licensed under the
+This material is Copyright 2018 Google LLC.  and is licensed under the
 [Apache 2.0 License](LICENSE). This includes the Java code as well as
 the API Proxy configuration.
 
