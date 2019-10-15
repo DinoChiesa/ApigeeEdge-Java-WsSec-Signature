@@ -4,6 +4,20 @@ This directory contains a maven project and the Java source code  required to
 compile a simple custom policy for Apigee Edge. The policy
 signs a SOAP document using a signature based on an X.509 certificate, or verifies a SOAP document that has been so signed. The implementation uses WSS4J, the well-known Java library for WS-Security.
 
+## Status
+
+THIS NO LONGER WORKS.
+
+Due to a permissions change in Apigee Edge runtime,
+this callout won't initialize. https://community.apigee.com/questions/59204/ws-security-signature-verification.html
+
+Good news: there's a _replacement_ available for this callout. Find it
+[here](https://github.com/DinoChiesa/ApigeeEdge-Java-WsSec-Signature-2).
+
+
+
+## Old Notes
+
 For example, suppose you have a document like this:
 ```xml
  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -248,14 +262,21 @@ You can find an example proxy bundle that uses the policy, [here in this repo](e
 To use it, you can deploy it with [the importAndDeploy tool](./tools/importAndDeploy.js) in [the tools directory](./tools):
 ```
 cd tools
-node ./importAndDeploy.js -v -n -o amer-demo4 -e test -d ../example-bundle/
+ORG=myorgname
+ENV=myenvname
+node ./importAndDeploy.js -v -n -o $ORG -e $ENV -d ../example-bundle/
 ```
 
 You can also provision a JKS into the KVM, to be used by the example proxy, with a tool in that directory:
 ```
-node ./provisionKvm.js -F larry-page.jks -A my-key-alias -P Secret123 -o amer-demo4 -e test -v -n -f
+node ./provisionKvm.js -F larry-page.jks -A my-key-alias -P Secret123 -o $ORG -e $ENV -v -n -f
 ```
 
+Invoke it like this:
+
+```
+
+```
 
 ## Building
 
@@ -292,4 +313,3 @@ the API Proxy configuration.
 ## Bugs
 
 * The tests could be more rigorous
-
