@@ -18,7 +18,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// last saved: <2018-February-22 14:47:24>
+// last saved: <2019-August-01 13:55:35>
 
 var fs = require('fs'),
     edgejs = require('apigee-edge-js'),
@@ -31,13 +31,13 @@ var fs = require('fs'),
     defaults = { mapname : 'jkssecrets' },
     getopt = new Getopt(common.commonOptions.concat([
       ['e' , 'env=ARG', 'required. the Edge environment for which to store the KVM data'],
-      ['M' , 'mapname=ARG', 'optional. name of the KVM in Edge for keys. Will be created if nec. Default: ' + defaults.mapname],
+      ['m' , 'mapname=ARG', 'optional. name of the KVM in Edge for keys. Will be created if nec. Default: ' + defaults.mapname],
       ['X' , 'notencrypted', 'optional. If creating a KVM, set it as not encrypted. Default: encrypted.'],
       ['f' , 'force', 'optional. will delete the map if it exists, without prompting.'],
       ['F' , 'jksfile=ARG', 'required. name of the file containing the JKS.'],
       ['A' , 'jksalias=ARG', 'required. alias of the key in the JKS.'],
-      ['P' , 'jkspassword=ARG', 'required. password for the key in the JKS.'],
-      ['T' , 'notoken', 'optional. do not try to get a authentication token.']
+      ['P' , 'jkspassword=ARG', 'required. password for the key in the JKS.']
+
     ])).bindHelp();
 
 // ========================================================================================
@@ -153,11 +153,12 @@ var options = {
 apigeeEdge.connect(options, function(e, org) {
   handleError(e, org);
   common.logWrite('connected');
-  org.getProperties(function(e, orgPropsResult) {
-    handleError(e, orgPropsResult);
+  org.getProperties(function(e, orgProperties) {
+    handleError(e, orgProperties);
+    console.log('props: ' + JSON.stringify(orgProperties));
     org.kvms.get({ env: opt.options.env }, function(e, kvmresult) {
       handleError(e, kvmresult);
-      if (orgPropsResult.properties['features.isCpsEnabled']) {
+      if (orgProperties['features.isCpsEnabled']) {
         if (kvmresult.indexOf(opt.options.mapname) > -1) {
           loadKvm(org, true, keysLoadedCb);
         }

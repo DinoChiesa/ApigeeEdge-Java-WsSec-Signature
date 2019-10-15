@@ -235,7 +235,7 @@ public class TestSOAPSignerCallout {
         ExecutionResult actualResult = callout.execute(msgCtxt, exeCtxt);
         String wssec_error = msgCtxt.getVariable("wssec_error");
 
-        Assert.assertEquals(wssec_error, "empty jks-base64 property", "JKS variable");
+        Assert.assertEquals(wssec_error, "empty jks-base64 property", "wssec_error");
     }
 
 }

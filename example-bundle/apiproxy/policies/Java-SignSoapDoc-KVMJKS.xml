@@ -4,6 +4,6 @@
     <Property name='password'>{private.jkspassword}</Property>
     <Property name='jks-base64'>{private.jksbase64}</Property>
   </Properties>
-  <ClassName>com.google.apigee.callout.wssec.SOAPSigner</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
+  <ClassName>com.google.apigee.edgecallouts.wssec.SOAPSigner</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.5.jar</ResourceURL>
 </JavaCallout>

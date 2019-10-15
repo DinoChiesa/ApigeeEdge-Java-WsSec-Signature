@@ -15,6 +15,7 @@
 
 package com.google.apigee.util;
 
+import com.apigee.flow.message.MessageContext;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
@@ -63,15 +64,20 @@ public class Signature {
     private static final String wsuNS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
     private static final String xmlNS = "xmlns";
 
-    static {
-        // Initialize BouncyCastle conditionally. Security.addProvider() is not permitted when run within Apigee Edge,
-        // and is not necessary there, anyway, since Edge includes it. addProvider() is required when running outside
-        // of Edge, as with running unit tests, or in a standalone client.
-        if (java.security.Security.getProvider("BC") == null)
-            java.security.Security.addProvider(new BouncyCastleProvider());
-    }
-
-    public Signature() throws Exception {
+    // TODO: uncomment?
+    // static {
+    //     // Initialize BouncyCastle conditionally. Security.addProvider() is not
+    //     // permitted when run within Apigee Edge, and is not necessary there,
+    //     // anyway, since Edge includes it. addProvider() is required when
+    //     // running outside of Edge, as with running unit tests, or in a
+    //     // standalone client.
+    //     if (java.security.Security.getProvider("BC") == null)
+    //         java.security.Security.addProvider(new BouncyCastleProvider());
+    // }
+  private MessageContext msgCtxt;
+    public Signature(MessageContext msgCtxt) throws Exception {
+      this.msgCtxt = msgCtxt;
+        // TODO: uncomment?
         WSSConfig.setAddJceProviders(false);
         org.apache.wss4j.stax.setup.WSSec.init();
         org.apache.xml.security.Init.init();
@@ -84,32 +90,42 @@ public class Signature {
     }
 
     private String signMessage0(String content, SigningOptions options, Crypto crypto) throws Exception {
-        maybeModifyCrypto(crypto, options);
+    // TODO: uncomment
+        //maybeModifyCrypto(crypto, options);
 
-        Document doc = XmlUtil.toDocument(content);
-        SOAPConstants soapConstants = WSSecurityUtil.getSOAPConstants(doc.getDocumentElement());
-        WSSecHeader secHeader = new WSSecHeader(doc);
-        secHeader.insertSecurityHeader();
+        // Document doc = XmlUtil.toDocument(content);
+        // SOAPConstants soapConstants = WSSecurityUtil.getSOAPConstants(doc.getDocumentElement());
+        // WSSecHeader secHeader = new WSSecHeader(doc);
+        // secHeader.insertSecurityHeader();
+        //
+        // WSSecSignature builder = new WSSecSignature(secHeader);
+        //
+        // builder.setUserInfo(options.alias, options.password);
+        // builder.setKeyIdentifierType(WSConstants.ISSUER_SERIAL);
+        // builder.setIncludeSignatureToken(options.includeSignatureToken);
+        //
+        // // other options could be parameterized here as well
+        //
+        // WSEncryptionPart encP = new WSEncryptionPart(soapConstants.getBodyQName().getLocalPart(),
+        //                                              soapConstants.getEnvelopeURI(),
+        //                                              "Content");
+        // builder.getParts().add(encP);
+        // Document signedDoc = builder.build(crypto);
+        //
+        // //WSHandlerResult result = secEngine.processSecurityHeader(signedDoc, null, null, crypto);
+        //
+        // //String outputString = XmlUtil.toPrettyString(signedDoc);
+        // String outputString = XmlUtil.toString(signedDoc); // cannot do pretty here, becaue of digsig and c18n
+        // return outputString;
 
-        WSSecSignature builder = new WSSecSignature(secHeader);
-
-        builder.setUserInfo(options.alias, options.password);
-        builder.setKeyIdentifierType(WSConstants.ISSUER_SERIAL);
-        builder.setIncludeSignatureToken(options.includeSignatureToken);
-
-        // other options could be parameterized here as well
-
-        WSEncryptionPart encP = new WSEncryptionPart(soapConstants.getBodyQName().getLocalPart(),
-                                                     soapConstants.getEnvelopeURI(),
-                                                     "Content");
-        builder.getParts().add(encP);
-        Document signedDoc = builder.build(crypto);
-
-        //WSHandlerResult result = secEngine.processSecurityHeader(signedDoc, null, null, crypto);
-
-        //String outputString = XmlUtil.toPrettyString(signedDoc);
-        String outputString = XmlUtil.toString(signedDoc); // cannot do pretty here, becaue of digsig and c18n
-        return outputString;
+return "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http://example.com/ns'>\n"+
+"<soapenv:Header>\n"+
+"    <wsse:Security\n"+
+"        xmlns:wsse='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'\n"+
+"        xmlns:wsu='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'\n"+
+"        soapenv:mustUnderstand='1'><ds:Signature xmlns:ds='http://www.w3.org/2000/09/xmldsig#' Id='SIG-fe82667b-76ab-4005-b2c9-ef9f4eec7330'/></wsse:Security></soapenv:Header>\n"+
+"   <soapenv:Body>signed message here</soapenv:Body>\n"+
+    "</soapenv:Envelope>";
     }
 
     private void maybeModifyCrypto(Crypto crypto, Options options) throws java.io.IOException, java.security.cert.CertificateException, java.security.NoSuchAlgorithmException {

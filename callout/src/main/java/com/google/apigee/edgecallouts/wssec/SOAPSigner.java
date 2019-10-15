@@ -41,8 +41,31 @@ public class SOAPSigner extends WsSecCalloutBase implements Execution {
     public ExecutionResult execute0(MessageContext msgCtxt) throws Exception {
         Message msg = msgCtxt.getMessage();
         String msgContent = msg.getContent();
-        Signature signer = new Signature();
+        // Signature signer = new Signature();
+        // Signature.SigningOptions options = new Signature.SigningOptions();
+        // options.includeSignatureToken = getIncludeSignatureToken(msgCtxt);
+        // options.alias = getSimpleRequiredProperty("alias", msgCtxt);
+        // options.password = getSimpleRequiredProperty("password", msgCtxt);
+        // String jksBase64 = getSimpleOptionalProperty("jks-base64", msgCtxt);
+        // if (jksBase64 != null) {
+        //     if (jksBase64.equals("")) {
+        //         msgCtxt.setVariable(varName("error"), "empty jks-base64 property");
+        //         return ExecutionResult.ABORT;
+        //     }
+        //     options.jksStream = new Base64InputStream(new ByteArrayInputStream(normalizeString(jksBase64).getBytes(StandardCharsets.UTF_8)));
+        //     options.jksPassword = getSimpleOptionalProperty("jks-password", msgCtxt);
+        // }
+        // else {
+        //     msgCtxt.setVariable(varName("error"), "empty jks-base64 property");
+        //     return ExecutionResult.ABORT;
+        // }
+        // String signedMessage = signer.signMessage(msgContent, options);
+        // String outputVar = getOutputVar(msgCtxt);
+        // msgCtxt.setVariable(outputVar, signedMessage);
 
+        // =======================================================================
+
+        Signature signer = new Signature(msgCtxt);
         Signature.SigningOptions options = new Signature.SigningOptions();
         options.includeSignatureToken = getIncludeSignatureToken(msgCtxt);
         options.alias = getSimpleRequiredProperty("alias", msgCtxt);
@@ -60,9 +83,12 @@ public class SOAPSigner extends WsSecCalloutBase implements Execution {
             msgCtxt.setVariable(varName("error"), "empty jks-base64 property");
             return ExecutionResult.ABORT;
         }
+
+        // throws ExceptionInInitializerError (uncatchable)
         String signedMessage = signer.signMessage(msgContent, options);
         String outputVar = getOutputVar(msgCtxt);
         msgCtxt.setVariable(outputVar, signedMessage);
+
         return ExecutionResult.SUCCESS;
     }
 }

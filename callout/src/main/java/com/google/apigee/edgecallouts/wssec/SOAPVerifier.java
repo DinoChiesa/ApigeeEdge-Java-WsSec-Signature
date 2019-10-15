@@ -34,7 +34,7 @@ public class SOAPVerifier extends WsSecCalloutBase implements Execution {
     public ExecutionResult execute0(MessageContext msgCtxt) throws Exception {
         Message msg = msgCtxt.getMessage();
         String msgContent = msg.getContent();
-        Signature verifier = new Signature();
+        Signature verifier = new Signature(msgCtxt);
 
         Signature.VerifyingOptions options = new Signature.VerifyingOptions();
         options.alias = getSimpleRequiredProperty("alias", msgCtxt);

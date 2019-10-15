@@ -1,6 +1,6 @@
 {
   "name": "apigee-edge-wssec-example-tools",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Tools for provisioning KVM and importing the proxy for the WS-Sec example",
   "main": "provisionKvm.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "dchiesa@google.com",
   "license": "Apache-2.0",
   "dependencies": {
-    "apigee-edge-js": "^0.3.3",
+    "apigee-edge-js": "^0.4.10",
     "node-getopt": "^0.3.1",
     "readline-sync": "^1.4.9",
     "sprintf-js": "^1.1.1"

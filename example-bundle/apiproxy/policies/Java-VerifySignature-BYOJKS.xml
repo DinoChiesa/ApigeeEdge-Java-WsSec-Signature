@@ -1,5 +1,6 @@
 <JavaCallout name='Java-VerifySignature-BYOJKS'>
   <Properties>
+    <Property name='debug'>true</Property>
     <Property name='alias'>my-key-alias</Property>
     <Property name='password'>Secret123</Property>
     <Property name='jks-base64'>
@@ -53,6 +54,6 @@
       +qA=
     </Property>
   </Properties>
-  <ClassName>com.google.apigee.callout.wssec.SOAPVerifier</ClassName>
-  <ResourceURL>java://edge-wssec-sign-x509-1.0.4.jar</ResourceURL>
+  <ClassName>com.google.apigee.edgecallouts.wssec.SOAPVerifier</ClassName>
+  <ResourceURL>java://edge-wssec-sign-x509-1.0.5.jar</ResourceURL>
 </JavaCallout>
